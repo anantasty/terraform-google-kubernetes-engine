@@ -19,7 +19,7 @@ No action is needed if you use the module's default service account.
 -  version = "~> 4.0"
 +  version = "~> 5.0"
 
-    service_account  = "project-service-account@my-project.iam.gserviceaccount.com"
+   service_account        = "project-service-account@my-project.iam.gserviceaccount.com"
 +  create_service_account = true
    # ...
  }
