@@ -16,6 +16,10 @@ v5.0.0 is a backwards-incompatible release. Please see the [upgrading guide](./d
 * Support for Intranode Visbiility (IV) and Veritical Pod Autoscaling (VPA) beta features [#216]
 * Support for Workload Identity beta feature [#234]
 
+### Fixed
+
+* Fixed issue with passing a dynamically created Service Account to the module. [#27]
+
 ## [v4.1.0] 2019-07-24
 
 ### Added
@@ -173,6 +177,7 @@ v5.0.0 is a backwards-incompatible release. Please see the [upgrading guide](./d
 [v0.2.0]: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/compare/v0.1.0...v0.2.0
 
 [#234]: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/234
+[#27]: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/issues/27
 [#216]: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/216
 [#214]: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/214
 [#210]: https://github.com/terraform-google-modules/terraform-google-kubernetes-engine/pull/210
