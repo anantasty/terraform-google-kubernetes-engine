@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Extending the adopted spec, each change should have a link to its corresponding pull request appended.
 
 ## [Unreleased]
+
+## [v5.0.0] - 2019-XX-XX
+v5.0.0 is a backwards-incompatible release. Please see the [upgrading guide](./docs/upgrading_to_v5.0.md).
+
 ### Added
 
 * Support for Intranode Visbiility (IV) and Veritical Pod Autoscaling (VPA) beta features [#216]
