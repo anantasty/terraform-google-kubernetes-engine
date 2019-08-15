@@ -26,7 +26,12 @@ MIGRATIONS = [
         "resource_type": "google_container_cluster",
         "name": "zonal_primary",
         "rename": "primary",
-        "replace": True,
+        "module": ""
+    },
+    {
+        "resource_type": "google_container_node_pool",
+        "name": "zonal_pools",
+        "rename": "pools",
         "module": ""
     },
 ]
@@ -251,7 +256,6 @@ def migrate(statefile, dryrun=False):
 
     # Group resources based on the module where they're defined.
     modules = group_by_module(resources)
-    print('modules', len(modules))
 
     # Filter our list of Terraform modules down to anything that looks like a
     # zonal GKE module. We key this off the presence off of
