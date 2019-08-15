@@ -56,16 +56,12 @@ class ModuleMigration:
             new = copy.deepcopy(old)
             new.module += migration["module"]
 
-            print("new", new.name)
-
             # Update the copied resource with the "rename" value if it is set
             if "rename" in migration:
                 new.name = migration["rename"]
 
             pair = (old.path(), new.path())
             moves.append(pair)
-
-        print("moves", moves)
         return moves
 
     def targets(self):
@@ -210,11 +206,11 @@ def group_by_module(resources):
     ]
 
 
-def read_state(statefile):
+def read_state(statefile=None):
     """
     Read the terraform state at the given path.
     """
-    argv = ["terraform", "state", "list", "-state", statefile]
+    argv = ["terraform", "state", "list"]
     result = subprocess.run(argv,
                             capture_output=True,
                             check=True,
@@ -224,7 +220,7 @@ def read_state(statefile):
     return elements
 
 
-def state_changes_for_module(module, statefile):
+def state_changes_for_module(module, statefile=None):
     """
     Compute the Terraform state changes (deletions and moves) for a single
     module.
@@ -235,13 +231,13 @@ def state_changes_for_module(module, statefile):
 
     for (old, new) in migration.moves():
         wrapper = '"{0}"'
-        argv = ["terraform", "state", "mv", "-state", statefile, wrapper.format(old), wrapper.format(new)]
+        argv = ["terraform", "state", "mv", wrapper.format(old), wrapper.format(new)]
         commands.append(argv)
 
     return commands
 
 
-def migrate(statefile, dryrun=False):
+def migrate(statefile=None, dryrun=False):
     """
     Migrate the terraform state in `statefile` to match the post-refactor
     resource structure.
@@ -263,7 +259,7 @@ def migrate(statefile, dryrun=False):
     # unique to a GKE module.
     modules_to_migrate = [
         module for module in modules
-        if module.has_resource("google_container_cluster", "zonal_primary")
+        if module.has_resource("google_container_cluster", "zonal_pools")
     ]
 
     print("---- Migrating the following modules:")
@@ -275,6 +271,7 @@ def migrate(statefile, dryrun=False):
     for module in modules_to_migrate:
         commands += state_changes_for_module(module, statefile)
 
+    print("---- Commands to run:")
     for argv in commands:
         if dryrun:
             print(" ".join(argv))
@@ -285,23 +282,21 @@ def main(argv):
     parser = argparser()
     args = parser.parse_args(argv[1:])
 
-    print("cp {} {}".format(args.oldstate, args.newstate))
-    shutil.copy(args.oldstate, args.newstate)
+    # print("cp {} {}".format(args.oldstate, args.newstate))
+    # shutil.copy(args.oldstate, args.newstate)
 
-    migrate(args.newstate, dryrun=args.dryrun)
-    print("State migration complete, verify migration with "
-          "`terraform plan -state '{}'`".format(args.newstate))
+    migrate(dryrun=True)
 
 def argparser():
     parser = argparse.ArgumentParser(description='Migrate Terraform state')
-    parser.add_argument('oldstate', metavar='oldstate.json',
-                        help='The current Terraform state (will not be '
-                             'modified)')
-    parser.add_argument('newstate', metavar='newstate.json',
-                        help='The path to the new state file')
-    parser.add_argument('--dryrun', action='store_true',
-                        help='Print the `terraform state mv` commands instead '
-                             'of running the commands.')
+    # parser.add_argument('oldstate', metavar='oldstate.json',
+    #                     help='The current Terraform state (will not be '
+    #                          'modified)')
+    # parser.add_argument('newstate', metavar='newstate.json',
+    #                     help='The path to the new state file')
+    # parser.add_argument('--dryrun', action='store_true',
+    #                     help='Print the `terraform state mv` commands instead '
+    #                          'of running the commands.')
     return parser
 
 
