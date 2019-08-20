@@ -259,7 +259,7 @@ def migrate(statefile=None, dryrun=False):
     # unique to a GKE module.
     modules_to_migrate = [
         module for module in modules
-        if module.has_resource("google_container_cluster", "zonal_pools")
+        if module.has_resource("google_container_cluster", "zonal_primary")
     ]
 
     print("---- Migrating the following modules:")
